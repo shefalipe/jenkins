@@ -1,35 +1,37 @@
 pipeline {
-    agent any 
-    stages {
-        stage('Static Analysis') {
-            steps {
-                echo 'Run the static analysis to the code' 
-            }
+  agent any
+  stages {
+    stage('Form') {
+      input {
+        message "Please fill this form"
+        parameters {
+          string(name: 'PERSON', defaultValue: '', description: 'Your Name: ')
+          booleanParam(name: 'STUDENT', defaultValue: true, description: 'Student')
+          choice(name: 'DIVISION', choices: ['A', 'B'], description: 'Pick division')
+          text(name: 'PID', defaultValue: '', description: 'Enter your PID')
         }
-        stage('Compile') {
-            steps {
-                echo 'Compile the source code' 
-            }
-        }
-        stage('Security Check') {
-            steps {
-                echo 'Run the security check against the application' 
-            }
-        }
-        stage('Run Unit Tsts') {
-            steps {
-                echo 'Run unit tests from the source code' 
-            }
-        }
-        stage('Run Integration Tests') {
-            steps {
-                echo 'Run only crucial integration tests from the source code' 
-            }
-        }
-        stage('Publish Artifacts') {
-            steps {
-                echo 'Save the assemblies generated from the compilation' 
-            }
-        }
+      }
+      steps {
+        echo "Hello, ${params.PERSON}"
+        echo "Toggle: ${params.STUDENT}"
+        echo "Choice: ${params.DIVISION}"
+        echo "PID: ${params.PID}"
+      }
     }
+    stage('info') {
+            steps {
+                echo 'This was your information'
+            }
+        }
+    stage('Bye') {
+            steps {
+                echo 'Bye'
+            }
+        }
+  }
+  post {
+    failure {
+      echo 'The build was unsuccessful, try again later.'
+    }
+  }
 }
